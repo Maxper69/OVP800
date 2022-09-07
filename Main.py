@@ -178,4 +178,4 @@ while True:  # making a loop
         # close port to avoid overheating
         config['ports']['port2']['state'] = "IDLE" #Expecting a head on Port 0
         o3r.set(config)
-        break  # finishing the loope7
+        break  # finishing the loope
