@@ -64,6 +64,7 @@ files = {
 
 im_width=1280
 im_height=800
+
  # Load pipeline config and build a detection model
 configs = config_util.get_configs_from_pipeline_file(files['PIPELINE_CONFIG'])
 detection_model = model_builder.build(model_config=configs['model'], is_training=False)
@@ -89,20 +90,7 @@ o3r.set(config)
 while True:  # making a loop
     print("loop")
     if keyboard.is_pressed('t'):  # if key 't' is pressed trigger photo    
-        fg = FrameGrabber(o3r, pcic_port=50012) #Expecting a head on Port 2 (Port 2 == 50012)
-        im = ImageBuffer()     
-        if fg.wait_for_frame(im, 1000):
-            # 3D Data
-            img3D = im.distance_image()
-            plt.imshow(img3D)
-            plt.savefig('myfilename3D.png', dpi=100)
-            print("3D photo Saved")
-
-            # Read the distance image and display a pixel in the center
-            dist = im.distance_image()
-            (width, height) = dist.shape
-            print(dist[width//2,height//2])
-
+        
 
         fg = FrameGrabber(o3r, pcic_port=50010) #Expecting a head on Port 0 (Port 0 == 50010)
         im = ImageBuffer()
@@ -162,15 +150,40 @@ while True:  # making a loop
 
             plt.imshow(cv2.cvtColor(image_np_with_detections, cv2.COLOR_BGR2RGB))
             print(detections['detection_scores'])
-            #(left, right, top, bottom) = (xmin * im_width, xmax * im_width, ymin * im_height, ymax * im_height)
+            #(left, right, bottom, top) = (xmin * im_width, xmax * im_width, ymin * im_height, ymax * im_height)
             print(detections['detection_boxes'])
+            print(detections['detection_boxes'][0][0])
+            objbb = ((detections['detection_boxes'][0][0])*im_width),((detections['detection_boxes'][0][1])*im_width),((detections['detection_boxes'][0][2])*im_height),((detections['detection_boxes'][0][3])*im_height)
 
-
-            print(im_width)
+            print(objbb)
+            objcenter = (((objbb[0]+objbb[1])/2),((objbb[2]+objbb[3])/2))
+            print(objcenter)
 
             cv2.imwrite('D:/Code/OVP800_IFM/bouchon26.jpg', image_np_with_detections)
             image = Image.open('D:/Code/OVP800_IFM/bouchon26.jpg')
             image.show()
+
+        fg = FrameGrabber(o3r, pcic_port=50012) #Expecting a head on Port 2 (Port 2 == 50012)
+        im = ImageBuffer()     
+        if fg.wait_for_frame(im, 1000):
+            # 3D Data
+            img3D = im.distance_image()
+            plt.imshow(img3D)
+            plt.savefig('myfilename3D.png', dpi=100)
+            print("3D photo Saved")
+
+            # Read the distance image and display a pixel in the center
+            dist = im.distance_image()
+            (width, height) = dist.shape
+            print(dist.shape)
+            print(dist[width//2,height//2])
+            
+            xaskz = round((objcenter[0]-148)/4.4)
+            yaskz = round((objcenter[1]-22)/4.4)
+            print(yaskz)
+            print(dist[xaskz,yaskz])
+            print(dist[65,87])
+
 
     #tif keyboard.is_pressed('q'):  # if key 'q' is pressed t
         print('Exiting...')
@@ -178,4 +191,4 @@ while True:  # making a loop
         # close port to avoid overheating
         config['ports']['port2']['state'] = "IDLE" #Expecting a head on Port 0
         o3r.set(config)
-        break  # finishing the loop main?
+        break  # finishing the loop
