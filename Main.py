@@ -14,7 +14,6 @@ from google.protobuf import text_format
 from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as viz_utils
 from object_detection.builders import model_builder
-import cv2 
 import numpy as np
 from matplotlib import pyplot as plt
 from imutils import paths
@@ -65,7 +64,7 @@ files = {
 im_width=1280
 im_height=800
 
- # Load pipeline config and build a detection model
+ # Load pipeline config and build a detection mode
 configs = config_util.get_configs_from_pipeline_file(files['PIPELINE_CONFIG'])
 detection_model = model_builder.build(model_config=configs['model'], is_training=False)
 
@@ -168,6 +167,12 @@ while True:  # making a loop
         if fg.wait_for_frame(im, 1000):
             # 3D Data
             img3D = im.distance_image()
+
+            #try to save in img
+            #img = Image.fromarray(img3D, 'L')
+            #img.save('my.png')
+            #img.show()
+
             plt.imshow(img3D)
             plt.savefig('myfilename3D.png', dpi=100)
             print("3D photo Saved")
