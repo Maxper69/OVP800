@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 from PIL import Image
 
 # You should replace these 3 lines with the output in calibration step
-DIM=(1280, 800)
-K=np.array([[570.745531298554, 0.0, 634.754590876372], [0.0, 571.2493277542346, 383.15948388971617], [0.0, 0.0, 1.0]])
-D=np.array([[-0.026460843727798892], [0.12044929366868225], [-0.16522872093012023], [0.07746898581641035]])
+DIM=(960, 740)
+K=np.array([[572.632377821686, 0.0, 502.3727883845666], [0.0, 571.8920800894838, 353.64151728979175], [0.0, 0.0, 1.0]])
+D=np.array([[-0.023857951257414998], [0.06540923457587092], [-0.059851021477875854], [0.0081709509065374]])
 
 def undistort(img_path):
     img = cv2.imread(img_path)
@@ -18,9 +18,9 @@ def undistort(img_path):
     #cv2.waitKey(0)
     #cv2.destroyAllWindows()
 
-    cv2.imwrite('undistorted.jpeg', undistorted_img)
-    image = Image.open('undistorted.jpeg')
+    cv2.imwrite('undistorded0.png', undistorted_img)
+    image = Image.open('undistorted0.png')
     image.show()
 if __name__ == '__main__':
 #    for p in sys.argv[1:]:
-    undistort("D:\Code\OVP800_IFM\myfilename3D.png")
+    undistort("bouchon26.png")
