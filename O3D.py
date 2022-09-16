@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 import cv2
 #for test to read img
 import matplotlib.image as mpimg
-
+from PIL import Image
+from PIL import ImageOps
 from ifm3dpy import O3RCamera, FrameGrabber, ImageBuffer
 
 #Test installation
@@ -15,7 +16,7 @@ print(ifm3dpy.__version__)
 o3r = O3RCamera()
 config = o3r.get() #get the configuration saved on the VPU
 #print test config in json
-print(json.dumps(config, indent=4))
+#print(json.dumps(config, indent=4))
 
 # Set camera 2D PORT0 mode to RUN
 config['ports']['port0']['state'] = "RUN" #Expecting a head on Port 0
@@ -34,10 +35,33 @@ im = ImageBuffer()
 if fg.wait_for_frame(im, 1000):
     # 3D Data
     img3D = im.distance_image()
-    plt.imshow(img3D)
-    plt.savefig('myfilename3D.png', dpi=100)
-    plt.show()
+    #plt.imshow(img3D)
+    #plt.savefig('myfilename3D.png', dpi=100)
+    #plt.show()
+
+    #conversion en image de 255mm d'amplitude 
+    h = 223
+    l = 171
+    im = Image.new('L',(224,172))
+    for y in range(h):
+        for x in range(l):
+            print(img3D[x,y])
+            px = img3D[x,y]*1000
+            print(px)
+            px = px-200
+            if px > 255:
+                px = 255
+            if px < 0:
+                px =0
+
+            im.putpixel((y,x),int(px))  #inversion de x et des y pour faire une rotation a 90°
+    #m = ImageOps.mirror(im)
+
     
+    #print(int(px))
+
+    im.show()
+    im.save(r'D:\Code\OVP800_IFM\3D.png')  
 
     dist = im.distance_image()
     (width, height) = dist.shape

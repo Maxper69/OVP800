@@ -1,5 +1,5 @@
 import cv2
-img = cv2.imread("myfilename2D0.png")
+img = cv2.imread("undistorded0.png")
 x=125 # decalage de 35px entre capteur 2D et 3D
 y=30
 w=960
